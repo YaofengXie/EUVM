@@ -1,0 +1,46 @@
+name: GOPRO_test
+model_type: VideoRecurrentModel
+scale: 1
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:  # the 1st test dataset
+    name: GOPRO
+    type: VideoRecurrentSplitClipsTestDataset
+    dataroot_gt: /mnt/mydisk/Our/pt/input3
+    dataroot_lq: /mnt/mydisk/Our/pt/input3
+    cache_data: False
+    io_backend:
+      type: disk
+
+    num_frame: 4
+    num_overlap: 0
+
+# network structures
+network_g:
+  type: Deblur
+  num_feat: 28
+  num_block: 15
+
+# path
+path:
+  #pretrain_network_g: /home/ubuntu/Documents/Yuda/vex3/experiments/Our_GOPRO-withoutrorpall/models/net_g_30000.pth
+  pretrain_network_g: /home/ubuntu/Documents/Yuda/vex3/experiments/Our_GOPRO-6000/models/net_g_44000.pth
+  strict_load_g: true
+
+# validation settingsa
+val:
+  save_img: True
+  flip_seq: false
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+    mse: # metric name, can be arbitrary
+      type: calculate_mse
+      crop_border: 0
+      test_y_channel: false
